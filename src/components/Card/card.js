@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-/* TODO: Figure out the width of the card when on the grid */
 const StyledCard = styled.a`
   align-items: center;
   background: ${props => props.theme.Colors.grayScale.white};
@@ -11,10 +10,11 @@ const StyledCard = styled.a`
   box-shadow: ${props => props.theme.Shadows.box.card};
   display: flex;
   flex-direction: column;
-  max-width: 200px;
+  /* max-width: 200px; */
 
   h3 {
     font-size: 1.125rem;
+    text-align: center;
   }
 
   p {
@@ -32,10 +32,16 @@ const StyledCard = styled.a`
 
 const Card = ({title, price, image}) => (
   <StyledCard>
-    <img src={image} />
+    <img src={image} alt={title} />
     <h3>{title}</h3>
     <p>${price}</p>
   </StyledCard>
 );
+
+Card.propTypes = {
+  title: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+};
 
 export default Card;
