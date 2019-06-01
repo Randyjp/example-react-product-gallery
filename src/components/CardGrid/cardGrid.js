@@ -5,10 +5,11 @@ import Card from '../Card';
 const StyledCardGrid = styled.div`
   display: grid;
   grid-gap: 2.3125rem 1.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  grid-area: content;
 `;
 
-const CardGrid = ({cardsItems}) => (
+const CardGrid = ({ cardsItems }) => (
   <StyledCardGrid>
     {cardsItems.map(item => (
       <Card

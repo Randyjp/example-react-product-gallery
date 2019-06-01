@@ -2,6 +2,7 @@ const Colors = {
   grayScale: {
     black: '#000',
     lightgray: '#E4E4E4',
+    lightgray2: '#B8B8B8',
     white: '#FFF',
   },
   yellow: {
@@ -16,7 +17,8 @@ const Shadows = {
 
 const Borders = {
   grey1px: `1px solid ${Colors.grayScale.lightgray}`,
+  grey1px2: `1px solid ${Colors.grayScale.lightgray2}`,
   gold2px: `1px solid ${Colors.yellow.gold}`,
 };
 
-export default {Borders, Colors, Shadows};
+export default { Borders, Colors, Shadows };

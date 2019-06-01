@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import queryString from 'query-string';
-import {Link} from 'react-router-dom';
-import {createBrowserHistory} from 'history';
+import { Link } from 'react-router-dom';
 
 const StyledFacets = styled.ul`
   display: flex;
@@ -31,7 +29,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Facet = ({categories}, ...rest) => {
+const Facet = ({ categories }, ...rest) => {
   // console.log(rest);
   // const history = createBrowserHistory();
   // const location = Object.assign({}, history.location);
@@ -64,7 +62,7 @@ const Facet = ({categories}, ...rest) => {
   // };
   function appendQueryToLink(name, query) {
     const urlParams = new URLSearchParams(window.location.search);
-    const current_category = parseInt(urlParams.get(name));
+    const currentCategory = parseInt(urlParams.get(name));
     urlParams.set(name, query.id);
     return (
       <StyledLink
@@ -72,7 +70,7 @@ const Facet = ({categories}, ...rest) => {
           pathname: '/products',
           search: `?${urlParams.toString()}`,
         }}
-        active={query.id === current_category ? 1 : 0}
+        active={query.id === currentCategory ? 1 : 0}
       >
         {query.name}
       </StyledLink>

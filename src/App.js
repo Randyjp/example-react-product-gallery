@@ -1,5 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {ThemeProvider} from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import { ThemeProvider } from 'styled-components';
+import { Normalize } from 'styled-normalize';
+import queryString from 'query-string';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
+
 import * as requests from './requests';
 import CardGrid from './components/CardGrid';
 import Header from './components/Header';
@@ -9,20 +18,13 @@ import SideBar from './components/SideBar';
 import PriceFilter from './components/PriceFilter';
 import theme from './styles/theme';
 import GlobalStyle from './styles/global';
-import {Normalize} from 'styled-normalize';
-import styled from 'styled-components';
-import queryString from 'query-string';
-import {addPQueryParameter} from './utils/url';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { addPQueryParameter } from './utils/url';
 
-function App({location, history}) {
+function App({ location, history }) {
   const [ProductList, setProductList] = useState({});
   const [categoryList, setCategoryList] = useState({});
+  const [priceFilters, setPriceFilters] = useState({});
+  const [textFilter, setTextFilter] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   // Here as an example to get you started with requests.js
   useEffect(
@@ -30,21 +32,26 @@ function App({location, history}) {
       (async () => {
         setIsLoading(true);
         const qs = queryString.parse(location.search);
-        console.log(qs);
+        // console.log(qs);
         const categories = await requests.getCategories();
         const categoryId = Number.parseInt(qs.category, 10) || categories[0].id;
-        const minPrice = Number.parseInt(qs.minPrice, 10);
-        const maxPrice = Number.parseInt(qs.maxPrice, 10);
+        const minPrice = Number.parseInt(qs.minPrice, 10) || '';
+        const maxPrice = Number.parseInt(qs.maxPrice, 10) || '';
+        const searchText = qs.searchText || '';
+        console.log(searchText);
         const products = await requests.getProducts({
           categoryId,
           minPrice,
           maxPrice,
+          searchText,
         });
         // const product = await requests.getProduct(products[0].id);
         setProductList(products);
         setCategoryList(categories);
-        // console.log('Example request: categories', categories);
+        setPriceFilters({ minPrice, maxPrice });
+        setTextFilter(searchText);
         // console.log('Example request: products', products);
+        // console.log('Example request: categories', categories);
         // console.log('Example request: product', product);
         // console.log(product.images.medium);
         setIsLoading(false);
@@ -55,7 +62,16 @@ function App({location, history}) {
 
   function filterByPrice(priceRanges) {
     const search = addPQueryParameter(location, priceRanges);
-    history.push({...location, search});
+    if (location.search !== search) {
+      history.push({ ...location, search });
+    }
+  }
+
+  function filterByText(searchText) {
+    const search = addPQueryParameter(location, { searchText });
+    if (location.search !== search) {
+      history.push({ ...location, search });
+    }
   }
 
   return (
@@ -64,14 +80,21 @@ function App({location, history}) {
         <Normalize />
         <GlobalStyle />
         <Layout>
-          <Header title=" amazing store" />
           {isLoading ? (
             <div>We are loading... </div>
           ) : (
             <React.Fragment>
+              <Header
+                title=" amazing store"
+                filterCallBack={filterByText}
+                defaultText={textFilter}
+              />
               <SideBar title="all categories">
                 <Facet categories={categoryList} />
-                <PriceFilter filterCallBack={filterByPrice} />
+                <PriceFilter
+                  filterCallBack={filterByPrice}
+                  defaultFilters={priceFilters}
+                />
               </SideBar>
               <CardGrid cardsItems={ProductList} />
             </React.Fragment>

@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSearch} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const StyledHeader = styled.header`
   background: ${props => props.theme.Colors.yellow.gold};
   display: flex;
-  /* height: 166px; */
+  /* max-height: 166px; */
   width: 100%;
   /* justify-content: center; */
   margin-bottom: 2.375rem;
@@ -56,23 +56,42 @@ const StyledSearchBoxContainer = styled.div`
   }
 `;
 
-const Header = ({title}) => (
-  <StyledHeader>
-    <div>
-      <a href="/">{title}</a>
-      <form>
-        <StyledSearchBoxContainer>
-          <FontAwesomeIcon icon={faSearch} fixedWidth />
-          <input
-            type="search"
-            name="search-box"
-            placeholder="Search by products by name"
-          />
-        </StyledSearchBoxContainer>
-      </form>
-    </div>
-  </StyledHeader>
-);
+const Header = ({ title, filterCallBack, defaultText = '' }) => {
+  const [searchText, setSearchText] = useState(defaultText);
+
+  console.log(defaultText);
+  function handleTextChange(event) {
+    event.preventDefault();
+    console.log(event.target.value);
+    setSearchText(event.target.value);
+  }
+
+  function handleFilterByText(event) {
+    event.preventDefault();
+    if (searchText !== defaultText) {
+      filterCallBack(searchText);
+    }
+  }
+  return (
+    <StyledHeader>
+      <div>
+        <a href="/">{title}</a>
+        <form onSubmit={handleFilterByText} onBlur={handleFilterByText}>
+          <StyledSearchBoxContainer>
+            <FontAwesomeIcon icon={faSearch} fixedWidth />
+            <input
+              type="search"
+              name="search-box"
+              placeholder="Search by products by name"
+              onChange={handleTextChange}
+              value={searchText}
+            />
+          </StyledSearchBoxContainer>
+        </form>
+      </div>
+    </StyledHeader>
+  );
+};
 
 Header.propTypes = {
   title: PropTypes.string.isRequired,

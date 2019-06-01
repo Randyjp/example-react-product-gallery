@@ -11,7 +11,7 @@ const StyledCard = styled.a`
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
-  /* max-width: 200px; */
+  max-height: 18.25rem;
 
   h3 {
     font-size: 1.125rem;
@@ -36,7 +36,7 @@ const StyledCard = styled.a`
   }
 `;
 
-const Card = ({title, price, image}) => (
+const Card = ({ title, price, image }) => (
   <StyledCard>
     <img src={image} alt={title} />
     <h3>{title}</h3>

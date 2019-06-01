@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StyledFilter = styled.div`
@@ -36,33 +37,27 @@ const StyledForm = styled.form`
   }
 `;
 
-const PriceFilter = ({filterCallBack}) => {
-  const [inputValues, setInputsValue] = useState({
-    minPrice: 0,
-    maxPrice: 0,
-  });
+const PriceFilter = ({ filterCallBack, defaultFilters }) => {
+  const [inputValues, setInputsValue] = useState(defaultFilters);
 
-  // console.log(inputValues);
   function handleFilterChange(event) {
     const {
-      target: {name, value},
+      target: { name, value },
     } = event;
-    const numericValue = parseInt(value, 10) || 0;
-
-    // // check that min price is < that_max
-    // if (
-    //   (name === 'minPrice' && numericValue > inputValues.maxPrice) ||
-    //   (name === 'maxPrice' && numericValue < inputValues.minPrice)
-    // ) {
-    //   return;
-    // }
-
-    setInputsValue({...inputValues, [name]: numericValue});
+    // const numericValue = Number.parseInt(value, 10) || 0;
+    // console.log(value);
+    setInputsValue({ ...inputValues, [name]: value });
   }
 
   function handleFilterProducts(event) {
     event.preventDefault();
-    filterCallBack(inputValues);
+    console.log(event.target);
+    if (
+      inputValues.minPrice !== defaultFilters.minPrice ||
+      inputValues.maxPrice !== defaultFilters.maxPrice
+    ) {
+      filterCallBack(inputValues);
+    }
   }
   return (
     <StyledFilter>
@@ -72,7 +67,8 @@ const PriceFilter = ({filterCallBack}) => {
         <input
           type="number"
           name="minPrice"
-          placeholder="$ min"
+          placeholder="$ Min"
+          maxLength={8}
           min={0}
           value={inputValues.minPrice}
           onChange={handleFilterChange}
@@ -80,7 +76,8 @@ const PriceFilter = ({filterCallBack}) => {
         <input
           type="number"
           name="maxPrice"
-          placeholder="$ max"
+          placeholder="$ Max"
+          maxLength={8}
           min={0}
           value={inputValues.maxPrice}
           onChange={handleFilterChange}
@@ -92,4 +89,14 @@ const PriceFilter = ({filterCallBack}) => {
   );
 };
 
+PriceFilter.propTypes = {
+  filterCallBack: PropTypes.func.isRequired,
+};
+
+PriceFilter.defaultProps = {
+  defaultFilters: {
+    minPrice: '',
+    maxPrice: '',
+  },
+};
 export default PriceFilter;
