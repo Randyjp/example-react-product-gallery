@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const StyledCard = styled.a`
   align-items: center;
   background: ${props => props.theme.Colors.grayScale.white};
+  color: ${props => props.theme.Colors.grayScale.black};
   border: ${props => props.theme.Borders.grey1px};
   border-radius: 0.25rem;
   box-shadow: ${props => props.theme.Shadows.box.card};
@@ -12,7 +13,7 @@ const StyledCard = styled.a`
   flex-direction: column;
   padding: 0.5rem;
   max-height: 18.25rem;
-
+  text-decoration: none;
   h3 {
     font-size: 1.125rem;
     margin-bottom: auto;
@@ -36,18 +37,18 @@ const StyledCard = styled.a`
   }
 `;
 
-const Card = ({ title, price, image }) => (
-  <StyledCard>
-    <img src={image} alt={title} />
-    <h3>{title}</h3>
-    <p>${price}</p>
+const Card = ({ item }) => (
+  <StyledCard href={item.id} data-id={item.id}>
+    <img src={item.images.medium} alt={item.name} />
+    <h3>{item.name}</h3>
+    <p>${item.price}</p>
   </StyledCard>
 );
 
-Card.propTypes = {
-  title: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-};
+// Card.propTypes = {
+//   title: PropTypes.string.isRequired,
+//   image: PropTypes.string.isRequired,
+//   price: PropTypes.number.isRequired,
+// };
 
 export default Card;

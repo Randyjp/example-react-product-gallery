@@ -9,6 +9,7 @@ const StyledFilter = styled.div`
   h3 {
     font-size: 0.875rem;
     font-weight: 600;
+    text-transform: uppercase;
   }
 `;
 
@@ -21,6 +22,7 @@ const StyledForm = styled.form`
     font-size: 0.875rem;
     /* height: 30px;
     width: 59px; */
+    max-width: 4rem;
     margin-right: 0.625rem;
     text-indent: 0.5rem;
   }
@@ -28,9 +30,9 @@ const StyledForm = styled.form`
   button {
     /* height: 34px; */
     /* width: 91px; */
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    background-color: #f8cb00;
+    padding: 0.5rem 2.5rem;
+    border-radius: 0.3125rem;
+    background-color: ${props => props.theme.Colors.yellow.gold};
     border: none;
     cursor: pointer;
     /* 615944 */

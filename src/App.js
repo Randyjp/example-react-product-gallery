@@ -50,7 +50,7 @@ function App({ location, history }) {
         setCategoryList(categories);
         setPriceFilters({ minPrice, maxPrice });
         setTextFilter(searchText);
-        // console.log('Example request: products', products);
+        console.log('Example request: products', products);
         // console.log('Example request: categories', categories);
         // console.log('Example request: product', product);
         // console.log(product.images.medium);

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+
 import Card from '../Card';
+import ProductModal from '../ProductModal';
 
 const StyledCardGrid = styled.div`
   display: grid;
@@ -9,17 +11,38 @@ const StyledCardGrid = styled.div`
   grid-area: content;
 `;
 
-const CardGrid = ({ cardsItems }) => (
-  <StyledCardGrid>
-    {cardsItems.map(item => (
-      <Card
-        key={item.id}
-        title={item.name}
-        price={item.price}
-        image={item.images['medium']}
-      />
-    ))}
-  </StyledCardGrid>
-);
+const CardGrid = ({ cardsItems }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState();
+
+  function handleClick(event) {
+    event.preventDefault();
+    const { target } = event;
+    console.log(target);
+
+    if (target.hasAttribute('href')) {
+      console.log(target.dataset.id);
+      setSelectedProductId(target.dataset.id);
+      setShowModal(true);
+    }
+  }
+
+  function closeModal() {
+    setShowModal(false);
+  }
+  return (
+    <React.Fragment>
+      <StyledCardGrid onClick={handleClick}>
+        {cardsItems.map(item => <Card key={item.id} item={item} />)}
+      </StyledCardGrid>
+      {showModal && (
+        <ProductModal
+          product={cardsItems[selectedProductId]}
+          closeCallBack={closeModal}
+        />
+      )}
+    </React.Fragment>
+  );
+};
 
 export default CardGrid;

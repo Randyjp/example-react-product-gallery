@@ -59,10 +59,10 @@ const StyledSearchBoxContainer = styled.div`
 const Header = ({ title, filterCallBack, defaultText = '' }) => {
   const [searchText, setSearchText] = useState(defaultText);
 
-  console.log(defaultText);
+  // console.log(defaultText);
   function handleTextChange(event) {
     event.preventDefault();
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setSearchText(event.target.value);
   }
 
