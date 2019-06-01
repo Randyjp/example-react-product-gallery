@@ -10,10 +10,12 @@ const StyledCard = styled.a`
   box-shadow: ${props => props.theme.Shadows.box.card};
   display: flex;
   flex-direction: column;
+  padding: 0.5rem;
   /* max-width: 200px; */
 
   h3 {
     font-size: 1.125rem;
+    margin-bottom: auto;
     text-align: center;
   }
 
@@ -22,6 +24,10 @@ const StyledCard = styled.a`
     font-size: 1.25rem;
     font-weight: 600;
     /* font-weight: 700; */
+  }
+
+  img {
+    margin-bottom: 1rem;
   }
 
   :hover,
