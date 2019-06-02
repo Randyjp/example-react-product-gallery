@@ -53,8 +53,8 @@ function didFilterParamsChange(location = window.location.search, prevObject) {
 
   const currentObject = getUrlParams(location);
 
-  console.log(queryString.stringify(currentObject));
-  console.log(queryString.stringify(prevObject));
+  // console.log(queryString.stringify(currentObject));
+  // console.log(queryString.stringify(prevObject));
   return (
     queryString.stringify(prevObject) !== queryString.stringify(currentObject)
   );

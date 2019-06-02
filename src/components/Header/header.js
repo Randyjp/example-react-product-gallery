@@ -45,7 +45,7 @@ const StyledStoreTitle = styled.a`
   text-transform: capitalize;
 
   @media (min-width: 47.9375rem) {
-    flex: 0 1 30%;
+    flex: 0 1 20%;
   }
 `;
 
@@ -60,6 +60,7 @@ const StyledHeaderContent = styled.div`
   @media (min-width: 47.9375rem) {
     align-items: center;
     flex-direction: row;
+    text-align: left;
     width: 100%;
   }
 `;
@@ -96,7 +97,7 @@ const Header = ({ title, filterCallBack, defaultText = '' }) => {
         <form onSubmit={handleFilterByText} onBlur={handleFilterByText}>
           <StyledSearchBoxContainer>
             <StyledSearchButton>
-              <FontAwesomeIcon icon={faSearch} size="md" />
+              <FontAwesomeIcon icon={faSearch} />
             </StyledSearchButton>
             <StyledSearchBox
               type="search"

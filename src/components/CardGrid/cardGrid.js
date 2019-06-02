@@ -9,14 +9,18 @@ import Card from '../Card';
 import ProductModal from '../ProductModal';
 import { addPQueryParameter } from '../../utils/url';
 
+const StyledCardGridContainer = styled.div`
+  grid-area: content;
+`;
+
 const StyledCardGrid = styled.div`
   display: grid;
   grid-gap: 2.3125rem 1.75rem;
   grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-  grid-area: content;
+  /* grid-area: content; */
 `;
 
-const CardGrid = React.memo(({ cardsItems, history, location }) => {
+const CardGrid = React.memo(({ cardsItems, category, history, location }) => {
   function closeModal() {
     const search = addPQueryParameter(location, { productId: undefined });
     if (location.search !== search) {
@@ -25,9 +29,12 @@ const CardGrid = React.memo(({ cardsItems, history, location }) => {
   }
   return (
     <React.Fragment>
-      <StyledCardGrid>
-        {cardsItems.map(item => <Card key={item.id} item={item} />)}
-      </StyledCardGrid>
+      <StyledCardGridContainer>
+        <h2>{category.name}</h2>
+        <StyledCardGrid>
+          {cardsItems.map(item => <Card key={item.id} item={item} />)}
+        </StyledCardGrid>
+      </StyledCardGridContainer>
       <Route
         path="/products"
         render={() => {
@@ -48,6 +55,10 @@ const CardGrid = React.memo(({ cardsItems, history, location }) => {
 });
 
 CardGrid.propTypes = {
+  category: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
   cardsItems: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

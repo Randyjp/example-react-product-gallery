@@ -43,7 +43,7 @@ function App({ location, history }) {
         });
         setCategoryList(categories);
         setProductList(products);
-        console.log(products);
+        console.log(categories);
       } catch (error) {
         console.log(error);
       }
@@ -176,7 +176,12 @@ function App({ location, history }) {
                   defaultFilters={priceFilters}
                 />
               </SideBar>
-              <CardGrid cardsItems={ProductList} />
+              <CardGrid
+                cardsItems={ProductList}
+                category={categoryList.find(
+                  category => category.id === selectedCategory
+                )}
+              />
             </React.Fragment>
           )}
         </Layout>

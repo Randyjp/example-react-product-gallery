@@ -1,21 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { addPQueryParameter } from '../../utils/url';
 import { Link } from 'react-router-dom';
+
+import { addPQueryParameter } from '../../utils/url';
 
 const StyledCard = styled(Link)`
   align-items: center;
   background: ${props => props.theme.Colors.grayScale.white};
-  color: ${props => props.theme.Colors.grayScale.black};
   border: ${props => props.theme.Borders.grey1px};
-  border-radius: 0.25rem;
   box-shadow: ${props => props.theme.Shadows.box.card};
+  border-radius: 0.25rem;
+  color: ${props => props.theme.Colors.grayScale.black};
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
   max-height: 18.25rem;
+  padding: 0.5rem;
   text-decoration: none;
+
   h3 {
     font-size: 1.125rem;
     margin-bottom: auto;
@@ -26,7 +28,6 @@ const StyledCard = styled(Link)`
     color: ${props => props.theme.Colors.yellow.gold};
     font-size: 1.25rem;
     font-weight: 600;
-    /* font-weight: 700; */
   }
 
   img {
@@ -44,8 +45,6 @@ const Card = ({ item }) => {
     productId: item.id,
   });
 
-  // console.log(window.location.search);
-
   return (
     <StyledCard
       to={{
@@ -60,10 +59,12 @@ const Card = ({ item }) => {
   );
 };
 
-// Card.propTypes = {
-//   title: PropTypes.string.isRequired,
-//   image: PropTypes.string.isRequired,
-//   price: PropTypes.number.isRequired,
-// };
+Card.propTypes = {
+  item: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    images: PropTypes.object.isRequired,
+    price: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default Card;
