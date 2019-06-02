@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Normalize } from 'styled-normalize';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 import {
   BrowserRouter as Router,
   Route,
@@ -31,7 +31,6 @@ function App({ location, history }) {
   const [priceFilters, setPriceFilters] = useState({});
   const [textFilter, setTextFilter] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedProductId, setSelectedProductId] = useState(-1);
   const [selectedCategory, setSelectedCategory] = useState(1);
   // Here as an example to get you started with requests.js
   useEffect(() => {
@@ -79,7 +78,7 @@ function App({ location, history }) {
     () => {
       if (categoryList) {
         (async () => {
-          const qs = queryString.parse(location.search);
+          // const qs = queryString.parse(location.search);
           // const productId = Number.parseInt(qs.productId, 10) || -1;
 
           const prevObject = {
@@ -101,17 +100,15 @@ function App({ location, history }) {
             });
             // const product = await requests.getProduct(products[0].id);
             setProductList(products);
-            // setCategoryList(categories);
             setPriceFilters({ minPrice, maxPrice });
             setTextFilter(searchText);
             setSelectedCategory(categoryId);
-            console.log('Example request: products', products);
+            // console.log('Example request: products', products);
             // console.log('Example request: categories', categories);
             // console.log('Example request: product', product);
             // console.log(product.images.medium);
             setIsLoading(false);
           }
-          // setSelectedProductId(productId);
         })();
       }
     },
@@ -179,11 +176,7 @@ function App({ location, history }) {
                   defaultFilters={priceFilters}
                 />
               </SideBar>
-              <CardGrid
-                cardsItems={ProductList}
-                selectedProductId={selectedProductId}
-                displayModal={selectedProductId > -1}
-              />
+              <CardGrid cardsItems={ProductList} />
             </React.Fragment>
           )}
         </Layout>

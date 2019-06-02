@@ -5,6 +5,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
+import FlatButton from '../FlatButton';
+
 const GlobalStyle = createGlobalStyle`
 /* removes scroll from body */
   body {
@@ -35,27 +37,6 @@ const StyledModal = styled.div`
   overflow: hidden;
   overflow-y: auto;
   width: 45%;
-`;
-
-const FlatButton = styled.button`
-  background-color: transparent;
-  border: 0;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-left: auto;
-  &:disabled {
-    background-color: transparent;
-    border: 0;
-  }
-  &:focus:enabled {
-    background-color: ${props => props.theme.Colors.grayScale.lightgray};
-    border: 0;
-    box-shadow: 0 0 0 4px ${props => props.theme.Colors.grayScale.lightgray};
-    outline: 2px solid ${props => props.theme.Colors.grayScale.white};
-  }
-  &:active:enabled {
-    background-color: ${props => props.theme.Colors.grayScale.lightgray};
-  }
 `;
 
 const Modal = ({ children, closeCallBack }) => {

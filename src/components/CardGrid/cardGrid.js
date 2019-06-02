@@ -7,7 +7,6 @@ import queryString from 'query-string';
 
 import Card from '../Card';
 import ProductModal from '../ProductModal';
-
 import { addPQueryParameter } from '../../utils/url';
 
 const StyledCardGrid = styled.div`
@@ -17,7 +16,7 @@ const StyledCardGrid = styled.div`
   grid-area: content;
 `;
 
-const CardGrid = ({ cardsItems, history, location }) => {
+const CardGrid = React.memo(({ cardsItems, history, location }) => {
   function closeModal() {
     const search = addPQueryParameter(location, { productId: undefined });
     if (location.search !== search) {
@@ -46,7 +45,7 @@ const CardGrid = ({ cardsItems, history, location }) => {
       />
     </React.Fragment>
   );
-};
+});
 
 CardGrid.propTypes = {
   cardsItems: PropTypes.arrayOf(
