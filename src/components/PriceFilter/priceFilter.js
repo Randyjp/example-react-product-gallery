@@ -53,7 +53,7 @@ const PriceFilter = ({ filterCallBack, defaultFilters }) => {
 
   function handleFilterProducts(event) {
     event.preventDefault();
-    console.log(event.target);
+    // console.log(event.target);
     if (
       inputValues.minPrice !== defaultFilters.minPrice ||
       inputValues.maxPrice !== defaultFilters.maxPrice

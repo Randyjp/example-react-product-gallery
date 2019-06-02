@@ -18,47 +18,130 @@ import SideBar from './components/SideBar';
 import PriceFilter from './components/PriceFilter';
 import theme from './styles/theme';
 import GlobalStyle from './styles/global';
-import { addPQueryParameter } from './utils/url';
+import {
+  addPQueryParameter,
+  didFilterParamsChange,
+  requestProducts,
+  getUrlParams,
+} from './utils/url';
 
 function App({ location, history }) {
   const [ProductList, setProductList] = useState({});
-  const [categoryList, setCategoryList] = useState({});
+  const [categoryList, setCategoryList] = useState();
   const [priceFilters, setPriceFilters] = useState({});
-  const [textFilter, setTextFilter] = useState('');
+  const [textFilter, setTextFilter] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedProductId, setSelectedProductId] = useState(-1);
+  const [selectedCategory, setSelectedCategory] = useState(1);
   // Here as an example to get you started with requests.js
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      try {
+        const categories = await requests.getCategories();
+        const products = await requests.getProducts({
+          categoryId: categories[0].id,
+        });
+        setCategoryList(categories);
+        setProductList(products);
+        console.log(products);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    })();
+  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const categories = await requests.getCategories();
+  //       setCategoryList(categories);
+  //       const filters = getUrlParams();
+  //       console.log(filters);
+  //       const products = await requestProducts(filters);
+  //       // const products = await requestProducts({
+  //       //   categoryId: categories[0].id,
+  //       // });
+  //       setPriceFilters({
+  //         minPrice: filters.minPrice,
+  //         maxPrice: filters.maxPrice,
+  //       });
+  //       setTextFilter(filters.searchText);
+  //       setProductList(products);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //     setIsLoading(false);
+  //   })();
+  // }, []);
   useEffect(
     () => {
-      (async () => {
-        setIsLoading(true);
-        const qs = queryString.parse(location.search);
-        // console.log(qs);
-        const categories = await requests.getCategories();
-        const categoryId = Number.parseInt(qs.category, 10) || categories[0].id;
-        const minPrice = Number.parseInt(qs.minPrice, 10) || '';
-        const maxPrice = Number.parseInt(qs.maxPrice, 10) || '';
-        const searchText = qs.searchText || '';
-        console.log(searchText);
-        const products = await requests.getProducts({
-          categoryId,
-          minPrice,
-          maxPrice,
-          searchText,
-        });
-        // const product = await requests.getProduct(products[0].id);
-        setProductList(products);
-        setCategoryList(categories);
-        setPriceFilters({ minPrice, maxPrice });
-        setTextFilter(searchText);
-        console.log('Example request: products', products);
-        // console.log('Example request: categories', categories);
-        // console.log('Example request: product', product);
-        // console.log(product.images.medium);
-        setIsLoading(false);
-      })();
+      if (categoryList) {
+        (async () => {
+          const qs = queryString.parse(location.search);
+          // const productId = Number.parseInt(qs.productId, 10) || -1;
+
+          const prevObject = {
+            categoryId: selectedCategory,
+            searchText: textFilter,
+            ...priceFilters,
+          };
+
+          if (didFilterParamsChange(location.search, prevObject)) {
+            setIsLoading(true);
+            const { categoryId, minPrice, maxPrice, searchText } = getUrlParams(
+              location.search
+            );
+            const products = await requests.getProducts({
+              categoryId,
+              minPrice,
+              maxPrice,
+              searchText,
+            });
+            // const product = await requests.getProduct(products[0].id);
+            setProductList(products);
+            // setCategoryList(categories);
+            setPriceFilters({ minPrice, maxPrice });
+            setTextFilter(searchText);
+            setSelectedCategory(categoryId);
+            console.log('Example request: products', products);
+            // console.log('Example request: categories', categories);
+            // console.log('Example request: product', product);
+            // console.log(product.images.medium);
+            setIsLoading(false);
+          }
+          // setSelectedProductId(productId);
+        })();
+      }
     },
-    [location]
+    [location.search, categoryList, priceFilters, selectedCategory, textFilter]
   );
+
+  // async function requestProducts(filters) {
+  //   const products = await requests.getProducts(filters);
+  //   return products;
+  // }
+  // function didFilterParamsChange(queryObject) {
+  //   const prevObject = {
+  //     categoryId: selectedCategory,
+  //     searchText: textFilter,
+  //     ...priceFilters,
+  //   };
+
+  //   const currentObject = {
+  //     categoryId: queryObject.category,
+  //     searchText: queryObject.searchText,
+  //     minPrice: queryObject.minPrice,
+  //     maxPrice: queryObject.maxPrice,
+  //   };
+
+  //   console.log(queryString.stringify(currentObject));
+  //   console.log(queryString.stringify(prevObject));
+  //   return (
+  //     queryString.stringify(prevObject) === queryString.stringify(currentObject)
+  //   );
+  // }
 
   function filterByPrice(priceRanges) {
     const search = addPQueryParameter(location, priceRanges);
@@ -96,7 +179,11 @@ function App({ location, history }) {
                   defaultFilters={priceFilters}
                 />
               </SideBar>
-              <CardGrid cardsItems={ProductList} />
+              <CardGrid
+                cardsItems={ProductList}
+                selectedProductId={selectedProductId}
+                displayModal={selectedProductId > -1}
+              />
             </React.Fragment>
           )}
         </Layout>

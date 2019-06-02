@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+/* eslint-disable react/forbid-prop-types */
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Route, withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 
 import Card from '../Card';
 import ProductModal from '../ProductModal';
+
+import { addPQueryParameter } from '../../utils/url';
 
 const StyledCardGrid = styled.div`
   display: grid;
@@ -11,38 +17,49 @@ const StyledCardGrid = styled.div`
   grid-area: content;
 `;
 
-const CardGrid = ({ cardsItems }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState();
-
-  function handleClick(event) {
-    event.preventDefault();
-    const { target } = event;
-    console.log(target);
-
-    if (target.hasAttribute('href')) {
-      console.log(target.dataset.id);
-      setSelectedProductId(target.dataset.id);
-      setShowModal(true);
-    }
-  }
-
+const CardGrid = ({ cardsItems, history, location }) => {
   function closeModal() {
-    setShowModal(false);
+    const search = addPQueryParameter(location, { productId: undefined });
+    if (location.search !== search) {
+      history.push({ ...location, search });
+    }
   }
   return (
     <React.Fragment>
-      <StyledCardGrid onClick={handleClick}>
+      <StyledCardGrid>
         {cardsItems.map(item => <Card key={item.id} item={item} />)}
       </StyledCardGrid>
-      {showModal && (
-        <ProductModal
-          product={cardsItems[selectedProductId]}
-          closeCallBack={closeModal}
-        />
-      )}
+      <Route
+        path="/products"
+        render={() => {
+          const qs = queryString.parse(location.search);
+          const productId = Number.parseInt(qs.productId, 10) || undefined;
+          return (
+            productId && (
+              <ProductModal
+                closeCallBack={closeModal}
+                product={cardsItems.find(item => item.id === productId)}
+              />
+            )
+          );
+        }}
+      />
     </React.Fragment>
   );
 };
 
-export default CardGrid;
+CardGrid.propTypes = {
+  cardsItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      price: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      images: PropTypes.object.isRequired,
+    })
+  ).isRequired,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+};
+
+export default withRouter(CardGrid);

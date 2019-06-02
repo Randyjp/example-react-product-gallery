@@ -1,6 +1,8 @@
 const Colors = {
   grayScale: {
     black: '#000',
+    darkGray: '#373738',
+    darkGray2: '#585858',
     lightgray: '#E4E4E4',
     lightgray2: '#B8B8B8',
     white: '#FFF',
@@ -12,6 +14,7 @@ const Colors = {
 const Shadows = {
   box: {
     card: '0 4px 14px 7px rgba(121, 121, 121, 0.05)',
+    modal: '0 16px 34px 7px rgba(121, 121, 121, 0.1);',
   },
 };
 

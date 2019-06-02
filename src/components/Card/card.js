@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { addPQueryParameter } from '../../utils/url';
+import { Link } from 'react-router-dom';
 
-const StyledCard = styled.a`
+const StyledCard = styled(Link)`
   align-items: center;
   background: ${props => props.theme.Colors.grayScale.white};
   color: ${props => props.theme.Colors.grayScale.black};
@@ -37,13 +39,26 @@ const StyledCard = styled.a`
   }
 `;
 
-const Card = ({ item }) => (
-  <StyledCard href={item.id} data-id={item.id}>
-    <img src={item.images.medium} alt={item.name} />
-    <h3>{item.name}</h3>
-    <p>${item.price}</p>
-  </StyledCard>
-);
+const Card = ({ item }) => {
+  const search = addPQueryParameter(window.location, {
+    productId: item.id,
+  });
+
+  // console.log(window.location.search);
+
+  return (
+    <StyledCard
+      to={{
+        pathname: '/products',
+        search,
+      }}
+    >
+      <img src={item.images.medium} alt={item.name} />
+      <h3>{item.name}</h3>
+      <p>${item.price}</p>
+    </StyledCard>
+  );
+};
 
 // Card.propTypes = {
 //   title: PropTypes.string.isRequired,
