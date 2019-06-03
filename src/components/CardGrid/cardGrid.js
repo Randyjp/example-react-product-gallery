@@ -17,8 +17,18 @@ const StyledCardGrid = styled.div`
   display: grid;
   grid-gap: 2.3125rem 1.75rem;
   grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-  /* grid-area: content; */
 `;
+
+const StyledNotFoundText = styled.p`
+  font-size: 3.5rem;
+  grid-area: content;
+  text-align: center;
+  text-transform: capitalize;
+`;
+
+const NotFound = () => (
+  <StyledNotFoundText>No products found....</StyledNotFoundText>
+);
 
 const CardGrid = React.memo(({ cardsItems, category, history, location }) => {
   function closeModal() {
@@ -29,12 +39,16 @@ const CardGrid = React.memo(({ cardsItems, category, history, location }) => {
   }
   return (
     <React.Fragment>
-      <StyledCardGridContainer>
-        <h2>{category.name}</h2>
-        <StyledCardGrid>
-          {cardsItems.map(item => <Card key={item.id} item={item} />)}
-        </StyledCardGrid>
-      </StyledCardGridContainer>
+      {cardsItems.length > 0 ? (
+        <StyledCardGridContainer>
+          <h2>{category.name}</h2>
+          <StyledCardGrid>
+            {cardsItems.map(item => <Card key={item.id} item={item} />)}
+          </StyledCardGrid>
+        </StyledCardGridContainer>
+      ) : (
+        <NotFound />
+      )}
       <Route
         path="/products"
         render={() => {

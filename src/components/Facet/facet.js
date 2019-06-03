@@ -31,10 +31,10 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Facet = ({ categories }, ...rest) => {
+const Facet = ({ categories = [] }, ...rest) => {
   function appendQueryToLink(name, query) {
     const urlParams = new URLSearchParams(window.location.search);
-    const currentCategory = parseInt(urlParams.get(name));
+    const currentCategory = Number.parseInt(urlParams.get(name), 10);
     urlParams.set(name, query.id);
     return (
       <StyledLink
@@ -58,4 +58,13 @@ const Facet = ({ categories }, ...rest) => {
   );
 };
 
+Facet.propTypes = {
+  // eslint-disable-next-line react/require-default-props
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired
+  ),
+};
 export default Facet;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StyledSideBar = styled.div`
@@ -20,4 +21,8 @@ const SideBar = ({ title, children }) => (
   </StyledSideBar>
 );
 
+SideBar.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
+};
 export default SideBar;

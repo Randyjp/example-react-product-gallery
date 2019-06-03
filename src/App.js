@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Normalize } from 'styled-normalize';
-// import queryString from 'query-string';
 import {
   BrowserRouter as Router,
   Route,
@@ -18,6 +17,7 @@ import SideBar from './components/SideBar';
 import PriceFilter from './components/PriceFilter';
 import theme from './styles/theme';
 import GlobalStyle from './styles/global';
+import LoadingSpinner from './components/LoadingSpinner';
 import {
   addPQueryParameter,
   didFilterParamsChange,
@@ -160,22 +160,22 @@ function App({ location, history }) {
         <Normalize />
         <GlobalStyle />
         <Layout>
+          <Header
+            title=" amazing store"
+            filterCallBack={filterByText}
+            defaultText={textFilter}
+          />
+          <SideBar title="all categories">
+            <Facet categories={categoryList} />
+            <PriceFilter
+              filterCallBack={filterByPrice}
+              defaultFilters={priceFilters}
+            />
+          </SideBar>
           {isLoading ? (
-            <div>We are loading... </div>
+            <LoadingSpinner />
           ) : (
             <React.Fragment>
-              <Header
-                title=" amazing store"
-                filterCallBack={filterByText}
-                defaultText={textFilter}
-              />
-              <SideBar title="all categories">
-                <Facet categories={categoryList} />
-                <PriceFilter
-                  filterCallBack={filterByPrice}
-                  defaultFilters={priceFilters}
-                />
-              </SideBar>
               <CardGrid
                 cardsItems={ProductList}
                 category={categoryList.find(

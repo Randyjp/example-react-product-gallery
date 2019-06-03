@@ -39,7 +39,7 @@ const StyledForm = styled.form`
   }
 `;
 
-const PriceFilter = ({ filterCallBack, defaultFilters }) => {
+const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
   const [inputValues, setInputsValue] = useState(defaultFilters);
 
   function handleFilterChange(event) {
@@ -89,7 +89,7 @@ const PriceFilter = ({ filterCallBack, defaultFilters }) => {
       {/* </React.Fragment> */}
     </StyledFilter>
   );
-};
+});
 
 PriceFilter.propTypes = {
   filterCallBack: PropTypes.func.isRequired,
