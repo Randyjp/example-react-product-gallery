@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Normalize } from 'styled-normalize';
 import {
@@ -25,70 +25,94 @@ import {
   getUrlParams,
 } from './utils/url';
 
+const Actions = Object.freeze({
+  LOADING: 'LOADING',
+  SET_CATEGORY: 'SET_CATEGORY',
+  SET_CATEGORIES: 'SET_CATEGORIES',
+  SET_PRODUCTS: 'SET_PRODUCTS',
+  SET_PRICE_FILTER: 'SET_PRICE_FILTER',
+  SET_TEXT_FILTER: 'SET_TEXT_FILTER',
+});
+const dataFetchReducer = (state, action) => {
+  switch (action.type) {
+    case Actions.SET_CATEGORIES:
+      return {
+        ...state,
+        categoryList: action.payload,
+      };
+    case Actions.SET_CATEGORY:
+      return {
+        ...state,
+        selectedCategory: action.payload,
+      };
+    case Actions.SET_PRODUCTS:
+      return {
+        ...state,
+        productList: action.payload,
+      };
+    case Actions.SET_PRICE_FILTER:
+      return {
+        ...state,
+        priceFilters: action.payload,
+      };
+    case Actions.SET_TEXT_FILTER:
+      return {
+        ...state,
+        textFilter: action.payload,
+      };
+    case Actions.LOADING:
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
 function App({ location, history }) {
-  const [ProductList, setProductList] = useState({});
-  const [categoryList, setCategoryList] = useState();
-  const [priceFilters, setPriceFilters] = useState({});
-  const [textFilter, setTextFilter] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(1);
+  const [state, dispatch] = useReducer(dataFetchReducer, {
+    productList: [],
+    selectedCategory: 1,
+    priceFilters: {},
+    textFilter: undefined,
+    isLoading: true,
+  });
   // Here as an example to get you started with requests.js
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
+      dispatch({ type: Actions.LOADING, payload: true });
       try {
         const categories = await requests.getCategories();
         const products = await requests.getProducts({
           categoryId: categories[0].id,
         });
-        setCategoryList(categories);
-        setProductList(products);
+        dispatch({ type: Actions.SET_CATEGORIES, payload: categories });
+        dispatch({ type: Actions.SET_PRODUCTS, payload: products });
+
+        // setCategoryList(categories);
+        // setProductList(products);
         console.log(categories);
       } catch (error) {
         console.log(error);
       }
-      setIsLoading(false);
+      // setIsLoading(false);
+      dispatch({ type: Actions.LOADING, payload: false });
     })();
   }, []);
-  // useEffect(() => {
-  //   (async () => {
-  //     setIsLoading(true);
-  //     try {
-  //       const categories = await requests.getCategories();
-  //       setCategoryList(categories);
-  //       const filters = getUrlParams();
-  //       console.log(filters);
-  //       const products = await requestProducts(filters);
-  //       // const products = await requestProducts({
-  //       //   categoryId: categories[0].id,
-  //       // });
-  //       setPriceFilters({
-  //         minPrice: filters.minPrice,
-  //         maxPrice: filters.maxPrice,
-  //       });
-  //       setTextFilter(filters.searchText);
-  //       setProductList(products);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //     setIsLoading(false);
-  //   })();
-  // }, []);
+
   useEffect(
     () => {
-      if (categoryList) {
+      if (state.categoryList) {
         (async () => {
-          // const qs = queryString.parse(location.search);
-          // const productId = Number.parseInt(qs.productId, 10) || -1;
-
           const prevObject = {
-            categoryId: selectedCategory,
-            searchText: textFilter,
-            ...priceFilters,
+            categoryId: state.selectedCategory,
+            searchText: state.textFilter,
+            ...state.priceFilters,
           };
 
           if (didFilterParamsChange(location.search, prevObject)) {
-            setIsLoading(true);
+            dispatch({ type: Actions.LOADING, payload: true });
             const { categoryId, minPrice, maxPrice, searchText } = getUrlParams(
               location.search
             );
@@ -98,47 +122,25 @@ function App({ location, history }) {
               maxPrice,
               searchText,
             });
-            // const product = await requests.getProduct(products[0].id);
-            setProductList(products);
-            setPriceFilters({ minPrice, maxPrice });
-            setTextFilter(searchText);
-            setSelectedCategory(categoryId);
+            dispatch({ type: Actions.SET_PRODUCTS, payload: products });
+            dispatch({
+              type: Actions.SET_PRICE_FILTER,
+              payload: { minPrice, maxPrice },
+            });
+            dispatch({ type: Actions.SET_TEXT_FILTER, payload: searchText });
+            dispatch({ type: Actions.SET_CATEGORY, payload: categoryId });
+
             // console.log('Example request: products', products);
             // console.log('Example request: categories', categories);
             // console.log('Example request: product', product);
             // console.log(product.images.medium);
-            setIsLoading(false);
+            dispatch({ type: Actions.LOADING, payload: false });
           }
         })();
       }
     },
-    [location.search, categoryList, priceFilters, selectedCategory, textFilter]
+    [location.search, state]
   );
-
-  // async function requestProducts(filters) {
-  //   const products = await requests.getProducts(filters);
-  //   return products;
-  // }
-  // function didFilterParamsChange(queryObject) {
-  //   const prevObject = {
-  //     categoryId: selectedCategory,
-  //     searchText: textFilter,
-  //     ...priceFilters,
-  //   };
-
-  //   const currentObject = {
-  //     categoryId: queryObject.category,
-  //     searchText: queryObject.searchText,
-  //     minPrice: queryObject.minPrice,
-  //     maxPrice: queryObject.maxPrice,
-  //   };
-
-  //   console.log(queryString.stringify(currentObject));
-  //   console.log(queryString.stringify(prevObject));
-  //   return (
-  //     queryString.stringify(prevObject) === queryString.stringify(currentObject)
-  //   );
-  // }
 
   function filterByPrice(priceRanges) {
     const search = addPQueryParameter(location, priceRanges);
@@ -153,6 +155,15 @@ function App({ location, history }) {
       history.push({ ...location, search });
     }
   }
+
+  const {
+    textFilter,
+    categoryList,
+    isLoading,
+    productList,
+    selectedCategory,
+    priceFilters,
+  } = state;
 
   return (
     <ThemeProvider theme={theme}>
@@ -177,7 +188,7 @@ function App({ location, history }) {
           ) : (
             <React.Fragment>
               <CardGrid
-                cardsItems={ProductList}
+                cardsItems={productList}
                 category={categoryList.find(
                   category => category.id === selectedCategory
                 )}

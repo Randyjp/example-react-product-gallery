@@ -38,23 +38,8 @@ function getUrlParams(search) {
 }
 
 function didFilterParamsChange(location = window.location.search, prevObject) {
-  // const prevObject = {
-  //   categoryId: selectedCategory,
-  //   searchText: textFilter,
-  //   ...priceFilters,
-  // };
-  // console.log(queryObject);
-  // const currentObject = {
-  //   categoryId: queryObject.category,
-  //   searchText: queryObject.searchText,
-  //   minPrice: queryObject.minPrice,
-  //   maxPrice: queryObject.maxPrice,
-  // };
-
   const currentObject = getUrlParams(location);
 
-  // console.log(queryString.stringify(currentObject));
-  // console.log(queryString.stringify(prevObject));
   return (
     queryString.stringify(prevObject) !== queryString.stringify(currentObject)
   );
