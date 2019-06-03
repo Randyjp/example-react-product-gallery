@@ -15,6 +15,7 @@
     "react-paginate": "^6.3.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
+    "react-select": "^3.0.4",
     "styled-components": "^4.2.0",
     "styled-normalize": "^8.0.6",
     "typeface-source-sans-pro": "0.0.54"

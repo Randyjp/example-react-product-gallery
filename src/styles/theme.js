@@ -9,6 +9,7 @@ const Colors = {
     white: '#FFF',
   },
   yellow: {
+    primary: '#FFDE00',
     gold: '#F8CB00',
   },
 };
