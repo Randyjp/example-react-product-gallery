@@ -20,7 +20,7 @@ const StyledCard = styled(Link)`
 
   h3 {
     font-size: 1.125rem;
-    margin-bottom: auto;
+    /* margin-bottom: auto; */
     text-align: center;
   }
 
@@ -28,6 +28,8 @@ const StyledCard = styled(Link)`
     color: ${props => props.theme.Colors.yellow.gold};
     font-size: 1.25rem;
     font-weight: 600;
+    margin: 0;
+    margin-top: auto;
   }
 
   img {

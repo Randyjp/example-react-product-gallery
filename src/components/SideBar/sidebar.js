@@ -8,9 +8,6 @@ const StyledSideBar = styled.div`
   > h3 {
     font-size: 0.875rem;
     text-transform: uppercase;
-    /* color: #000000; */
-    /* letter-spacing: 0; */
-    /* text-align: left; */
   }
 `;
 

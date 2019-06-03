@@ -20,22 +20,17 @@ const StyledForm = styled.form`
     border: ${props => props.theme.Borders.grey1px};
     border-radius: 0.125rem;
     font-size: 0.875rem;
-    /* height: 30px;
-    width: 59px; */
     max-width: 4rem;
     margin-right: 0.625rem;
     text-indent: 0.5rem;
   }
 
   button {
-    /* height: 34px; */
-    /* width: 91px; */
     padding: 0.5rem 2.5rem;
     border-radius: 0.3125rem;
     background-color: ${props => props.theme.Colors.yellow.gold};
     border: none;
     cursor: pointer;
-    /* 615944 */
   }
 `;
 
@@ -46,8 +41,6 @@ const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
     const {
       target: { name, value },
     } = event;
-    // const numericValue = Number.parseInt(value, 10) || 0;
-    // console.log(value);
     setInputsValue({ ...inputValues, [name]: value });
   }
 
@@ -63,7 +56,6 @@ const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
   }
   return (
     <StyledFilter>
-      {/* <React.Fragment> */}
       <h3>Filter By Price</h3>
       <StyledForm onSubmit={handleFilterProducts} onBlur={handleFilterProducts}>
         <input
@@ -93,12 +85,16 @@ const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
 
 PriceFilter.propTypes = {
   filterCallBack: PropTypes.func.isRequired,
+  defaultFilters: PropTypes.shape({
+    minPrice: PropTypes.number,
+    maxPrice: PropTypes.number,
+  }),
 };
 
 PriceFilter.defaultProps = {
   defaultFilters: {
-    minPrice: '',
-    maxPrice: '',
+    minPrice: undefined,
+    maxPrice: undefined,
   },
 };
 export default PriceFilter;

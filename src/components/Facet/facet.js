@@ -31,7 +31,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Facet = ({ categories = [] }, ...rest) => {
+const Facet = ({ categories = [] }) => {
   function appendQueryToLink(name, query) {
     const urlParams = new URLSearchParams(window.location.search);
     const currentCategory = Number.parseInt(urlParams.get(name), 10);

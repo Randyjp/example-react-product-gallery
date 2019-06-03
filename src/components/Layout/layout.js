@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 const StyledLayout = styled.div`
   display: grid;
-  /* justify-items: center; */
   grid-gap: 1.5rem;
 
   grid-template-columns: 1fr 2fr 5fr 1fr;
