@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
+    "history": "^4.9.0",
     "i": "^0.3.6",
     "npm": "^6.9.0",
     "prop-types": "^15.7.2",
@@ -23,8 +24,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test": "react-scripts test --env=jsdom"
   },
   "husky": {
     "hooks": {
@@ -32,16 +33,23 @@
     }
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@testing-library/react": "^8.0.1",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-jest": "^22.6.4",
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-react-hooks": "^1.6.0",
     "faker": "4.1.0",
     "husky": "1.0.0-rc.13",
+    "jest-dom": "^3.4.0",
     "prettier": "1.13.7",
-    "pretty-quick": "1.6.0"
+    "pretty-quick": "1.6.0",
+    "react-test-renderer": "^16.8.6"
   },
   "browserslist": {
     "production": [

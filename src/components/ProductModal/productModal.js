@@ -54,8 +54,10 @@ const ProductModal = ({ product, closeCallBack }) => {
             <img src={product.images.large} alt={product.name} />
           </StyledImageContainer>
           <StyledContent>
-            <h2 id="modal_title">{product.name}</h2>
-            <span>${product.price}</span>
+            <h2 id="modal_title" data-testid="modal-title">
+              {product.name}
+            </h2>
+            <span data-testid="modal-price">${product.price}</span>
             <p>{product.description}</p>
           </StyledContent>
         </StyledModalContainer>

@@ -36,6 +36,7 @@ const Facet = ({ categories = [] }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const currentCategory = Number.parseInt(urlParams.get(name), 10);
     urlParams.set(name, query.id);
+
     return (
       <StyledLink
         to={{

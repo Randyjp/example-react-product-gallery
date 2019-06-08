@@ -53,10 +53,11 @@ const Card = ({ item }) => {
         pathname: '/products',
         search,
       }}
+      data-testid="card-container"
     >
       <img src={item.images.medium} alt={item.name} />
       <h3>{item.name}</h3>
-      <p>${item.price}</p>
+      <p data-testid="product-price">${item.price}</p>
     </StyledCard>
   );
 };

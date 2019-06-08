@@ -13,10 +13,12 @@ const Sorter = ({ filters = [], OnSort }) => (
 );
 
 Sorter.propTypes = {
-  filters: PropTypes.shape({
-    value: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
-  }).isRequired,
+  filters: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.number.isRequired,
+      label: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
   OnSort: PropTypes.func.isRequired,
 };
 

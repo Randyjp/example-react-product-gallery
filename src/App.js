@@ -3,12 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ThemeProvider } from 'styled-components';
 import { Normalize } from 'styled-normalize';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import CardGrid from './components/CardGrid';
 import Header from './components/Header';
@@ -85,12 +80,10 @@ function App({ location, history }) {
 }
 
 export default () => (
-  <Router>
-    <Switch>
-      <Route path="/products" component={App} />
-      <Redirect to="/products" />
-    </Switch>
-  </Router>
+  <Switch>
+    <Route path="/products" component={App} />
+    <Redirect to="/products" />
+  </Switch>
 );
 
 App.propTypes = {

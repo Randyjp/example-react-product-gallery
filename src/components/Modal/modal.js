@@ -40,6 +40,16 @@ const StyledModal = styled.div`
 `;
 
 const Modal = ({ children, closeCallBack }) => {
+  useEffect(() => {
+    window.addEventListener('scroll', noScroll);
+    window.addEventListener('keydown', handleCloseModal);
+
+    return () => {
+      window.removeEventListener('scroll', noScroll);
+      window.removeEventListener('keydown', handleCloseModal);
+    };
+  });
+
   function noScroll() {
     window.scrollTo(0, 0);
   }
@@ -52,15 +62,6 @@ const Modal = ({ children, closeCallBack }) => {
       closeCallBack();
     }
   }
-  useEffect(() => {
-    window.addEventListener('scroll', noScroll);
-    window.addEventListener('keydown', handleCloseModal);
-
-    return () => {
-      window.removeEventListener('scroll', noScroll);
-      window.removeEventListener('keydown', handleCloseModal);
-    };
-  });
 
   return ReactDom.createPortal(
     <StyledModalOverlay>
@@ -70,8 +71,9 @@ const Modal = ({ children, closeCallBack }) => {
         aria-labelledby="modal_title"
         aria-modal="true"
         onKeyDown={handleCloseModal}
+        data-testid="modal-container"
       >
-        <FlatButton onClick={closeCallBack}>
+        <FlatButton data-testid="modal-button" onClick={closeCallBack}>
           <FontAwesomeIcon icon={faTimes} size="lg" />
         </FlatButton>
         {children()}
