@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import {
+  useCategoryState,
+  useCategoryDispatch,
+} from '../../context/categoryContext';
 
 const StyledFacets = styled.ul`
   display: flex;
@@ -15,7 +18,7 @@ const StyledFacets = styled.ul`
   }
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.a`
   color: ${props =>
     props.active
       ? props.theme.Colors.yellow.gold
@@ -32,28 +35,35 @@ const StyledLink = styled(Link)`
 `;
 
 const Facet = ({ categories = [] }) => {
-  function appendQueryToLink(name, query) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentCategory = Number.parseInt(urlParams.get(name), 10);
-    urlParams.set(name, query.id);
+  const currentCategory = useCategoryState();
+  const setCurrentCategory = useCategoryDispatch();
 
+  function handleCategoryChange(event) {
+    event.preventDefault();
+    const { categoryId } = event.target.dataset;
+
+    if (categoryId) {
+      const numericCategory = Number.parseInt(categoryId, 10) || 1;
+      setCurrentCategory(numericCategory);
+    }
+  }
+
+  function anchorFactory(baseUrl, category) {
     return (
       <StyledLink
-        to={{
-          pathname: '/products',
-          search: `?${urlParams.toString()}`,
-        }}
-        active={query.id === currentCategory ? 1 : 0}
+        href={`${baseUrl}${category.id}`}
+        data-category-id={category.id}
+        active={category.id === currentCategory}
       >
-        {query.name}
+        {category.name}
       </StyledLink>
     );
   }
 
   return (
-    <StyledFacets>
+    <StyledFacets onClick={handleCategoryChange}>
       {categories.map(category => (
-        <li key={category.id}>{appendQueryToLink('category', category)}</li>
+        <li key={category.id}>{anchorFactory('/', category)}</li>
       ))}
     </StyledFacets>
   );

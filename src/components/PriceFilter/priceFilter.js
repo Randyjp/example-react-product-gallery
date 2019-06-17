@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import {
+  PriceActions,
+  usePriceFilterDispatch,
+} from '../../context/priceFilterContext';
 
 const StyledFilter = styled.div`
   display: flex;
@@ -34,8 +38,10 @@ const StyledForm = styled.form`
   }
 `;
 
-const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
-  const [inputValues, setInputsValue] = useState(defaultFilters);
+const PriceFilter = React.memo(({ priceFilters }) => {
+  // const priceFilters = usePriceFilterState();
+  const setPriceFilters = usePriceFilterDispatch();
+  const [inputValues, setInputsValue] = useState(priceFilters);
 
   function handleFilterChange(event) {
     const {
@@ -46,12 +52,19 @@ const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
 
   function handleFilterProducts(event) {
     event.preventDefault();
-    // console.log(event.target);
-    if (
-      inputValues.minPrice !== defaultFilters.minPrice ||
-      inputValues.maxPrice !== defaultFilters.maxPrice
-    ) {
-      filterCallBack(inputValues);
+    if (inputValues.minPrice !== priceFilters.minPrice) {
+      const minPrice = Number.parseInt(inputValues.minPrice, 10) || undefined;
+      setPriceFilters({
+        type: PriceActions.SET_MIN_PRICE,
+        minPrice,
+      });
+    }
+    if (inputValues.maxPrice !== priceFilters.maxPrice) {
+      const maxPrice = Number.parseInt(inputValues.maxPrice, 10) || undefined;
+      setPriceFilters({
+        type: PriceActions.SET_MAX_PRICE,
+        maxPrice,
+      });
     }
   }
   return (
@@ -78,21 +91,20 @@ const PriceFilter = React.memo(({ filterCallBack, defaultFilters }) => {
         />
         <button type="submit">Go</button>
       </StyledForm>
-      {/* </React.Fragment> */}
     </StyledFilter>
   );
 });
 
 PriceFilter.propTypes = {
-  filterCallBack: PropTypes.func.isRequired,
-  defaultFilters: PropTypes.shape({
+  // filterCallBack: PropTypes.func.isRequired,
+  priceFilters: PropTypes.shape({
     minPrice: PropTypes.number,
     maxPrice: PropTypes.number,
   }),
 };
 
 PriceFilter.defaultProps = {
-  defaultFilters: {
+  priceFilters: {
     minPrice: undefined,
     maxPrice: undefined,
   },
