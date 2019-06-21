@@ -39,7 +39,6 @@ const StyledForm = styled.form`
 `;
 
 const PriceFilter = React.memo(({ priceFilters }) => {
-  // const priceFilters = usePriceFilterState();
   const setPriceFilters = usePriceFilterDispatch();
   const [inputValues, setInputsValue] = useState(priceFilters);
 

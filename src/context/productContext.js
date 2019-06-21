@@ -1,59 +1,20 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { CategoryProvider, useCategoryState } from './categoryContext';
-import {
-  SearchTextProvider,
-  useSearchTextState,
-} from './searchTextFilterContext';
-import { PriceFilterProvider, usePriceFilterState } from './priceFilterContext';
-import useFetchProducts from '../hooks/useFetchProducts';
+// import useFetchProducts from '../hooks/useFetchProducts';
 
 const ProductStateContext = React.createContext();
 const ProductDispatchContext = React.createContext();
 
-function ProductContextMixer({ children }) {
+function ProductProvider({ children }) {
+  // const state = useFetchProducts();
   const [productList, setProductList] = useState([]);
-  const searchText = useSearchTextState();
-  const priceFilters = usePriceFilterState();
-  const selectedCategory = useCategoryState();
-
-  const { state: productState } = useFetchProducts(
-    selectedCategory,
-    priceFilters.minPrice,
-    priceFilters.maxPrice,
-    searchText
-  );
-
-  const state = {
-    productList: productState.productList,
-    searchText,
-    priceFilters,
-    selectedCategory,
-    isLoading: productState.isLoading,
-  };
 
   return (
-    <ProductStateContext.Provider value={state}>
+    <ProductStateContext.Provider value={productList}>
       <ProductDispatchContext.Provider value={setProductList}>
         {children}
       </ProductDispatchContext.Provider>
     </ProductStateContext.Provider>
-  );
-}
-
-ProductContextMixer.propTypes = {
-  children: PropTypes.element.isRequired,
-};
-
-function ProductProvider({ children }) {
-  return (
-    <CategoryProvider>
-      <SearchTextProvider>
-        <PriceFilterProvider>
-          <ProductContextMixer>{children}</ProductContextMixer>
-        </PriceFilterProvider>
-      </SearchTextProvider>
-    </CategoryProvider>
   );
 }
 
@@ -66,23 +27,23 @@ function useProductState() {
 
   if (context === undefined) {
     throw new Error(
-      'useProductListState must be render withing a ProductProvider component'
+      'useProductState must be render withing a ProductProvider component'
     );
   }
 
   return context;
 }
 
-function useProductListDispatch() {
+function useProductDispatch() {
   const context = useContext(ProductDispatchContext);
 
   if (context === undefined) {
     throw new Error(
-      'useProductListDispatch must be render withing a ProductProvider component'
+      'useProductDispatch must be render withing a ProductProvider component'
     );
   }
 
   return context;
 }
 
-export { ProductProvider, useProductListDispatch, useProductState };
+export { ProductProvider, useProductDispatch, useProductState };

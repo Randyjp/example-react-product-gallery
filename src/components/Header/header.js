@@ -118,9 +118,6 @@ const Header = ({ title, searchText }) => {
 Header.propTypes = {
   title: PropTypes.string.isRequired,
   searchText: PropTypes.string.isRequired,
-  // filterCallBack: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/require-default-props
-  // defaultText: PropTypes.string,
 };
 
 export default Header;

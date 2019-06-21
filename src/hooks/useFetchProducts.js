@@ -1,6 +1,5 @@
 import { useEffect, useReducer } from 'react';
 import * as requests from '../requests';
-// import { didFilterParamsChange, getUrlParams } from '../utils/url';
 
 const Actions = Object.freeze({
   LOADING: 'LOADING',
@@ -29,37 +28,21 @@ const dataFetchReducer = (state, action) => {
 };
 
 function useFetchProducts(
-  // categoryList,
   categoryId,
   minPrice,
   maxPrice,
-  searchText
+  searchText,
+  setIsLoading
 ) {
   const [state, dispatch] = useReducer(dataFetchReducer, {
     productList: [],
-    // selectedCategory: 1,
-    // priceFilters: {},
-    // textFilter: undefined,
-    isLoading: true,
   });
 
-  // after that ...
-  // if (categoryList) {
   useEffect(
     () => {
       (async () => {
+        setIsLoading(true);
         console.log('getting products');
-        // const prevObject = {
-        //   categoryId: state.selectedCategory,
-        //   searchText: state.textFilter,
-        //   ...state.priceFilters,
-        // };
-
-        // if (didFilterParamsChange(location.search, prevObject)) {
-        dispatch({ type: Actions.LOADING, payload: true });
-        // const { categoryId, minPrice, maxPrice, searchText } = getUrlParams(
-        //   location.search
-        // );
         const products = await requests.getProducts({
           categoryId,
           minPrice,
@@ -67,21 +50,14 @@ function useFetchProducts(
           searchText,
         });
         dispatch({ type: Actions.SET_PRODUCTS, payload: products });
-        // dispatch({
-        //   type: Actions.SET_PRICE_FILTER,
-        //   payload: { minPrice, maxPrice },
-        // });
-        // dispatch({ type: Actions.SET_TEXT_FILTER, payload: searchText });
-        // dispatch({ type: Actions.SET_CATEGORY, payload: categoryId });
-        dispatch({ type: Actions.LOADING, payload: false });
-        // }
+        setIsLoading(false);
       })();
       // }
     },
     [categoryId, minPrice, maxPrice, searchText]
   );
 
-  return { state, dispatch };
+  return state;
 }
 
 export default useFetchProducts;
