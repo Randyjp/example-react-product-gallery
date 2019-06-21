@@ -1,11 +1,9 @@
-/* eslint-disable react/forbid-prop-types */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Normalize } from 'styled-normalize';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
-import CardGrid from './components/CardGrid';
+import ProductGrid from './components/ProductGrid';
 import Header from './components/Header';
 import Facet from './components/Facet';
 import Layout from './components/Layout';
@@ -14,34 +12,30 @@ import PriceFilter from './components/PriceFilter';
 import theme from './styles/theme';
 import GlobalStyle from './styles/global';
 import LoadingSpinner from './components/LoadingSpinner';
-import useRequestApi from './dataFetching';
-import { addPQueryParameter } from './utils/url';
+import * as requests from './requests';
+import { AppProvider, useAppState } from './context/appContext';
 
-function App({ location, history }) {
-  const state = useRequestApi(location);
-
-  function filterByPrice(priceRanges) {
-    const search = addPQueryParameter(location, priceRanges);
-    if (location.search !== search) {
-      history.push({ ...location, search });
-    }
-  }
-
-  function filterByText(searchText) {
-    const search = addPQueryParameter(location, { searchText });
-    if (location.search !== search) {
-      history.push({ ...location, search });
-    }
-  }
+function App() {
+  const [categoryList, setCategoryList] = useState([]);
+  // fetch categories
+  useEffect(() => {
+    (async () => {
+      try {
+        const categories = await requests.getCategories();
+        setCategoryList(categories);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   const {
-    textFilter,
-    categoryList,
     isLoading,
     productList,
-    selectedCategory,
+    searchText,
     priceFilters,
-  } = state;
+    selectedCategory,
+  } = useAppState();
 
   return (
     <ThemeProvider theme={theme}>
@@ -49,29 +43,20 @@ function App({ location, history }) {
         <Normalize />
         <GlobalStyle />
         <Layout>
-          <Header
-            title=" amazing store"
-            filterCallBack={filterByText}
-            defaultText={textFilter}
-          />
+          <Header title="amazing store" searchText={searchText} />
           <SideBar title="all categories">
             <Facet categories={categoryList} />
-            <PriceFilter
-              filterCallBack={filterByPrice}
-              defaultFilters={priceFilters}
-            />
+            <PriceFilter priceFilters={priceFilters} />
           </SideBar>
-          {isLoading ? (
+          {isLoading || categoryList.length === 0 ? (
             <LoadingSpinner />
           ) : (
-            <React.Fragment>
-              <CardGrid
-                cardsItems={productList}
-                category={categoryList.find(
-                  category => category.id === selectedCategory
-                )}
-              />
-            </React.Fragment>
+            <ProductGrid
+              productList={productList}
+              category={categoryList.find(
+                category => category.id === selectedCategory
+              )}
+            />
           )}
         </Layout>
       </React.Fragment>
@@ -81,12 +66,14 @@ function App({ location, history }) {
 
 export default () => (
   <Switch>
-    <Route path="/products" component={App} />
+    <Route
+      path="/products"
+      render={() => (
+        <AppProvider>
+          <App />
+        </AppProvider>
+      )}
+    />
     <Redirect to="/products" />
   </Switch>
 );
-
-App.propTypes = {
-  history: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-};

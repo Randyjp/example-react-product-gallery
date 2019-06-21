@@ -1,16 +1,16 @@
 import React from 'react';
 import { fireEvent } from '@testing-library/react';
 
-import CardGrid from './cardGrid';
+import ProductGrid from './productGrid';
 import { render } from '../../utils/test';
 import { products, categories } from '../../data';
 
-describe('<CardGrid />', () => {
+describe('<ProductGrid />', () => {
   it(`renders category name as grid's title and card`, () => {
     const titleRegex = new RegExp(categories[0].name, 'i');
 
     const { getByText, getAllByTestId } = render(
-      <CardGrid cardsItems={products} category={categories[0]} />
+      <ProductGrid productList={products} category={categories[0]} />
     );
 
     expect(getByText(titleRegex)).toBeTruthy();
@@ -26,7 +26,7 @@ describe('<CardGrid />', () => {
     modalRoot.setAttribute('id', 'modal-root');
 
     const { getAllByTestId, queryByTestId } = render(
-      <CardGrid cardsItems={products} category={categories[0]} />,
+      <ProductGrid productList={products} category={categories[0]} />,
       {
         container: document.body.appendChild(modalRoot),
       }

@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 
 import { render as originalRender } from '@testing-library/react';
 import theme from '../styles/theme';
+import { AppProvider } from '../context/appContext';
 
 function render(
   ui,
@@ -21,7 +22,9 @@ function render(
     history,
     ...originalRender(
       <Router history={history}>
-        <ThemeProvider theme={theme}>{ui}</ThemeProvider>
+        <AppProvider>
+          <ThemeProvider theme={theme}>{ui}</ThemeProvider>
+        </AppProvider>
       </Router>
     ),
   };

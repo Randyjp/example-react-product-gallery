@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import FlatButton from '../FlatButton';
+import { useSearchTextDispatch } from '../../context/searchTextFilterContext';
 
 const StyledHeader = styled.header`
   background: ${props => props.theme.Colors.yellow.gold};
@@ -76,18 +77,19 @@ const StyledSearchButton = styled(FlatButton)`
   left: 4px;
 `;
 
-const Header = ({ title, filterCallBack, defaultText = '' }) => {
-  const [searchText, setSearchText] = useState(defaultText);
+const Header = ({ title, searchText }) => {
+  const setSearchTextContext = useSearchTextDispatch();
+  const [LocalSearchText, setLocalSearchText] = useState(searchText);
 
   function handleTextChange(event) {
     event.preventDefault();
-    setSearchText(event.target.value);
+    setLocalSearchText(event.target.value);
   }
 
   function handleFilterByText(event) {
     event.preventDefault();
-    if (searchText !== defaultText) {
-      filterCallBack(searchText);
+    if (LocalSearchText !== searchText) {
+      setSearchTextContext(LocalSearchText);
     }
   }
   return (
@@ -104,7 +106,7 @@ const Header = ({ title, filterCallBack, defaultText = '' }) => {
               name="search-box"
               placeholder="Search by product by name"
               onChange={handleTextChange}
-              value={searchText}
+              value={LocalSearchText}
             />
           </StyledSearchBoxContainer>
         </form>
@@ -115,9 +117,7 @@ const Header = ({ title, filterCallBack, defaultText = '' }) => {
 
 Header.propTypes = {
   title: PropTypes.string.isRequired,
-  filterCallBack: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/require-default-props
-  defaultText: PropTypes.string,
+  searchText: PropTypes.string.isRequired,
 };
 
 export default Header;

@@ -43,14 +43,16 @@ const NotFound = () => (
   <StyledNotFoundText>No products found....</StyledNotFoundText>
 );
 
-const CardGrid = React.memo(({ cardsItems, category, history, location }) => {
-  const [sortedItems, setSortedItems] = useState(cardsItems);
+const ProductGrid = ({ productList, location, history, category }) => {
+  const [sortedItems, setSortedItems] = useState(productList);
+
   function closeModal() {
     const search = addPQueryParameter(location, { productId: undefined });
     if (location.search !== search) {
       history.push({ ...location, search });
     }
   }
+
   function handleSort(selectedOption) {
     const itemsClone = [...sortedItems];
 
@@ -105,7 +107,7 @@ const CardGrid = React.memo(({ cardsItems, category, history, location }) => {
             productId && (
               <ProductModal
                 closeCallBack={closeModal}
-                product={cardsItems.find(item => item.id === productId)}
+                product={productList.find(item => item.id === productId)}
               />
             )
           );
@@ -113,14 +115,14 @@ const CardGrid = React.memo(({ cardsItems, category, history, location }) => {
       />
     </React.Fragment>
   );
-});
+};
 
-CardGrid.propTypes = {
+ProductGrid.propTypes = {
   category: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
-  cardsItems: PropTypes.arrayOf(
+  productList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       price: PropTypes.number.isRequired,
@@ -133,4 +135,4 @@ CardGrid.propTypes = {
   location: PropTypes.object.isRequired,
 };
 
-export default withRouter(CardGrid);
+export default withRouter(ProductGrid);

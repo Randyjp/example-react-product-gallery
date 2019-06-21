@@ -4,8 +4,15 @@ import { fireEvent } from '@testing-library/react';
 import Facet from './facet';
 import { render } from '../../utils/test';
 import { categories } from '../../data';
+import * as requests from '../../requests';
 
-describe('<CardGrid />', () => {
+jest.mock('../../requests', () => {
+  return {
+    getProducts: jest.fn(() => Promise.resolve([])),
+  };
+});
+
+describe('<Facet />', () => {
   it(`renders facet with proper filter names`, () => {
     const { getAllByText } = render(<Facet categories={categories} />);
 
@@ -15,15 +22,20 @@ describe('<CardGrid />', () => {
     });
   });
 
-  it(`sets search params when user clicks on category link`, () => {
-    const { getAllByText, history } = render(<Facet categories={categories} />);
+  it(`sets search params when user clicks on category link`, async () => {
+    const { getAllByText } = render(<Facet categories={categories} />);
 
-    expect(history.location.search).toBe('');
-
-    const filter = getAllByText(categories[0].name)[0];
-
+    const filter = getAllByText(categories[1].name)[0];
     fireEvent.click(filter);
 
-    expect(history.location.search).toBe(`?category=${categories[0].id}`);
+    expect(requests.getProducts.mock.calls.length).toBe(3);
+    expect(requests.getProducts).toHaveBeenCalledWith({
+      categoryId: categories[1].id,
+      maxPrice: undefined,
+      minPrice: undefined,
+      searchText: '',
+    });
+
+    requests.getProducts.mockReset();
   });
 });
