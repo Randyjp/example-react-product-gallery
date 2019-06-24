@@ -76,7 +76,7 @@ const PriceFilter = React.memo(({ priceFilters }) => {
           placeholder="$ Min"
           maxLength={8}
           min={0}
-          value={inputValues.minPrice}
+          value={inputValues.minPrice || ''}
           onChange={handleFilterChange}
         />
         <input
@@ -85,7 +85,7 @@ const PriceFilter = React.memo(({ priceFilters }) => {
           placeholder="$ Max"
           maxLength={8}
           min={0}
-          value={inputValues.maxPrice}
+          value={inputValues.maxPrice || ''}
           onChange={handleFilterChange}
         />
         <button type="submit">Go</button>
@@ -95,7 +95,6 @@ const PriceFilter = React.memo(({ priceFilters }) => {
 });
 
 PriceFilter.propTypes = {
-  // filterCallBack: PropTypes.func.isRequired,
   priceFilters: PropTypes.shape({
     minPrice: PropTypes.number,
     maxPrice: PropTypes.number,

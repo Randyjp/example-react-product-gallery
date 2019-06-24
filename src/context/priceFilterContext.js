@@ -33,7 +33,10 @@ function priceFilterReducer(state, action) {
 }
 
 function PriceFilterProvider({ children }) {
-  const [state, setPriceFilter] = useReducer(priceFilterReducer, {});
+  const [state, setPriceFilter] = useReducer(priceFilterReducer, {
+    // minPrice: ,
+    // maxPrice: ,
+  });
 
   return (
     <PriceStateContext.Provider value={state}>
