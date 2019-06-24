@@ -51,15 +51,28 @@ const PriceFilter = React.memo(({ priceFilters }) => {
 
   function handleFilterProducts(event) {
     event.preventDefault();
+    const minPrice = Number.parseInt(inputValues.minPrice, 10) || undefined;
+    const maxPrice = Number.parseInt(inputValues.maxPrice, 10) || undefined;
+
+    if (minPrice && maxPrice && minPrice > maxPrice) {
+      // reset all state
+      setPriceFilters({
+        type: PriceActions.RESET,
+      });
+      setInputsValue({
+        minPrice: 0,
+        maxPrice: 0,
+      });
+      // don't execute other conditions
+      return;
+    }
     if (inputValues.minPrice !== priceFilters.minPrice) {
-      const minPrice = Number.parseInt(inputValues.minPrice, 10) || undefined;
       setPriceFilters({
         type: PriceActions.SET_MIN_PRICE,
         minPrice,
       });
     }
     if (inputValues.maxPrice !== priceFilters.maxPrice) {
-      const maxPrice = Number.parseInt(inputValues.maxPrice, 10) || undefined;
       setPriceFilters({
         type: PriceActions.SET_MAX_PRICE,
         maxPrice,
