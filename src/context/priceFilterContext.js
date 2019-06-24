@@ -24,8 +24,9 @@ function priceFilterReducer(state, action) {
       };
     case 'RESET':
       return {
-        minPrice: undefined,
-        maxPrice: undefined,
+        ...state,
+        minPrice: 0,
+        maxPrice: 0,
       };
     default:
       throw new Error(`unrecognized action type: ${action.type}`);
@@ -33,7 +34,10 @@ function priceFilterReducer(state, action) {
 }
 
 function PriceFilterProvider({ children }) {
-  const [state, setPriceFilter] = useReducer(priceFilterReducer, {});
+  const [state, setPriceFilter] = useReducer(priceFilterReducer, {
+    minPrice: 0,
+    maxPrice: 0,
+  });
 
   return (
     <PriceStateContext.Provider value={state}>

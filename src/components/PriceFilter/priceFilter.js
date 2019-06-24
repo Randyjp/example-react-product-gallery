@@ -51,15 +51,28 @@ const PriceFilter = React.memo(({ priceFilters }) => {
 
   function handleFilterProducts(event) {
     event.preventDefault();
+    const minPrice = Number.parseInt(inputValues.minPrice, 10) || undefined;
+    const maxPrice = Number.parseInt(inputValues.maxPrice, 10) || undefined;
+
+    if (minPrice && maxPrice && minPrice > maxPrice) {
+      // reset all state
+      setPriceFilters({
+        type: PriceActions.RESET,
+      });
+      setInputsValue({
+        minPrice: 0,
+        maxPrice: 0,
+      });
+      // don't execute other conditions
+      return;
+    }
     if (inputValues.minPrice !== priceFilters.minPrice) {
-      const minPrice = Number.parseInt(inputValues.minPrice, 10) || undefined;
       setPriceFilters({
         type: PriceActions.SET_MIN_PRICE,
         minPrice,
       });
     }
     if (inputValues.maxPrice !== priceFilters.maxPrice) {
-      const maxPrice = Number.parseInt(inputValues.maxPrice, 10) || undefined;
       setPriceFilters({
         type: PriceActions.SET_MAX_PRICE,
         maxPrice,
@@ -76,7 +89,7 @@ const PriceFilter = React.memo(({ priceFilters }) => {
           placeholder="$ Min"
           maxLength={8}
           min={0}
-          value={inputValues.minPrice}
+          value={inputValues.minPrice || ''}
           onChange={handleFilterChange}
         />
         <input
@@ -85,7 +98,7 @@ const PriceFilter = React.memo(({ priceFilters }) => {
           placeholder="$ Max"
           maxLength={8}
           min={0}
-          value={inputValues.maxPrice}
+          value={inputValues.maxPrice || ''}
           onChange={handleFilterChange}
         />
         <button type="submit">Go</button>
@@ -95,7 +108,6 @@ const PriceFilter = React.memo(({ priceFilters }) => {
 });
 
 PriceFilter.propTypes = {
-  // filterCallBack: PropTypes.func.isRequired,
   priceFilters: PropTypes.shape({
     minPrice: PropTypes.number,
     maxPrice: PropTypes.number,
